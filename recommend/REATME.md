@@ -1,4 +1,5 @@
 1. 文件说明
+
 RecommendationSys.py : 推荐系统的主要文件
 
 DBhandler.py : 对数据库处理的文件
@@ -19,5 +20,6 @@ c201804291551 ： 顾客的id
 格式；
 
 [{"id":"p201804281611","name":"名称","pic":"/web/imag.png","shop":"店铺名","price":"5.2"},
+
  {"id":"p201804281620","name":"名称","pic":"/web/imag.png","shop":"店铺名","price":"200.0"}]
 
