@@ -146,10 +146,12 @@ def getRecommendation(customer_id,N=10,beta = 1):
     customer_orders = DBhandler.orders_based_on_customerId(customer_id)#{item:date}
     #如果订单的数量大于0的话，根据基于时间的ItemCF和基于内容的推荐得到初始的推荐列表
 
+    rec_reason = None 
+    
     if len(customer_orders)<1:
-        personal_recommendation = recommend_on_features(customer_id,T0=getCurrentDay(),N=N,beta=beta)
+        personal_recommendation = recommend_on_features(customer_id,T0=getCurrentDay(),N=2*N,beta=beta)
     else:
-        personal_recommendation,rec_reason = recommend_on_itemsimilarity(customer_id,T0 = getCurrentDay(),N=N,beta=beta)
+        personal_recommendation,rec_reason = recommend_on_itemsimilarity(customer_id,T0 = getCurrentDay(),N=2*N,beta=beta)
  
     '''
     personal_recommendation =  [('Superman Returns', 1.0107142857142857),
@@ -159,28 +161,34 @@ def getRecommendation(customer_id,N=10,beta = 1):
                         ('Lady in the Water', 0.6102941176470589),
                         ('Just My Luck', 0.46637426900584794)]'''
 
-    #对初始的推荐列表进行过滤：过滤掉不属于商品推广列表中的的商
+    #对初始的推荐列表进行过滤：过滤掉不属于商品推广列表中的的商品和用户不喜欢的商品
     #排序：根据相似度和推荐的出价来对推荐的结果加权，并据此进行排序，得到最终推荐的商品的ID
     rec_commodities = DBhandler.get_recommend_commodities()
+    dislike_commodities = DBhandler.get_dislike_commodities(customer_id)#用户不喜欢的商品
+    
     '''
     rec_commodities = [('Superman Returns', 2),
                         ('The Night Listener', 1),
                         ('You, Me and Dupree', 1.5),
                         ('Just My Luck',0.5)]'''
-    rec_commodities = {item:price for item,price in rec_commodities}
-
+    rec_commodities = {item:price for item,price in rec_commodities}#将推荐的商品转换为字符串的形式
 
     recommendation = dict()
     for item,sim in personal_recommendation:
         if item not in rec_commodities : continue
+        if item in dislike_commodities : continue
         recommendation[item] = sim*rec_commodities[item]
 
     rec_commodities_id = [item for item,rank in sorted(recommendation.items(),key=lambda x:x[1],reverse=True)]
 
-    #return rec_commodities_id
-
+    #得到商品的推荐理由
+    recommend_reason = {}
+    if rec_reason is not None:
+        for rec,reason in rec_reason:
+            recommend_reason[rec] = DBhandler.get_productname(reason)
+            
     #还需要一个方法将商品的ID转换为商品属性信息，并以json的格式返回
-    return getCommodityAttributes(rec_commodities_id)
+    return getCommodityAttributes(rec_commodities_id,recommend_reason)
 
 
 def getPopularItem(N=10,beta=1):
@@ -189,10 +197,11 @@ def getPopularItem(N=10,beta=1):
     #计算相似用户的商品的：流行度（基于时间的流行度）
     popular_item = popularItem(prefs,T0 = getCurrentDay(),N=N,beta = beta)
     items = [item for item,popularity in popular_item]
-    return getCommodityAttributes(items)
+    
+    return getCommodityAttributes(items,{})
 
 
-def getCommodityAttributes(commodity_ids):
+def getCommodityAttributes(commodity_ids,recommend_reason):
     '''根据给定的商品列表得到商品的属性信息，并以json的格式返回
         commodity_ids : 列表，表示推荐的商品的ID
     '''
@@ -205,21 +214,25 @@ def getCommodityAttributes(commodity_ids):
 
     #将商品信息转换为json格式
     '''
-    [{"id":commodity_id, "name":name, "pic":picture_url, "price":price},
-     {"id":commodity_id, "name":name, "pic":picture_url, "price":price}
+    [{"id":commodity_id, "name":name, "pic":picture_url, "price":price,"reason":"reason"},
+     {"id":commodity_id, "name":name, "pic":picture_url, "price":price,"reason":"reason"}
     ]
     '''
+    has_reason = 0
+    if len(recommend_reason)>0 : has_reason = 1
+    
     js = "["
-    for i in range(len(attributes)-1):
+    for i in range(len(attributes)):
         item = attributes[i]
-        js += '{"id":"'+str(item[0])+'","name":"'+item[1]+'","pic":"'+item[2]+'","shop":"'+item[3]+'","price":"'+str(item[4])+'"},'
-
-    item = attributes[len(attributes)-1]
-    js += '{"id":"'+str(item[0])+'","name":"'+item[1]+'","pic":"'+item[2]+'","shop":"'+item[3]+'","price":"'+str(item[4])+'"}]'
-
+        js += '{"id":"'+str(item[0])+'","name":"'+item[1]+'","pic":"'+item[2]+'","shop":"'+item[3]+'","price":"'+str(item[4])+'"'
+        if (has_reason):
+            js += ',"reason":"'+recommend_reason[item[0]]+'"'
+        js += '},'
+    
+    js = js[:-1] + ']'
+        
     return js
 #******************************************************************************
-
 
 
 #时间处理的函数
