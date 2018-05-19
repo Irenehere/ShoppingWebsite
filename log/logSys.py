@@ -88,7 +88,7 @@ def shopLogIn(shopname,password):
 def forget_password(userid,answer):
 
     '''忘记密码，需要输入用户名和密保问题来重置密码'''
-    #根据userid得到该用户具体的密保问题
+    #根据userid得到该用户具体的密保问题(验证用户名是否存在的时候已经返回了用户id，不用再根据用户名查询用户
     orig_answer = DBhandlerLog.get_password_answer(userid)
     
     #将输入的密码答案和原来的答案进行对比，不一样的话返回“0”，表示密保问题错误
