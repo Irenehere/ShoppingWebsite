@@ -1,0 +1,86 @@
+
+#store {width:1150px;height:35px;margin:0 auto;border-top:1px solid #ededed;border-bottom:1.5px solid #FF8A80; line-height:35px;position:relative}
+#store span {margin-left:90px;font-size:13px;color:#6c6c6c;position:relative}
+#store span a {text-decoration:none;color:#6c6c6c;}
+#store span a:hover {text-decoration:underline;color:red;}
+#store .storeName {margin-left:50px;}
+#store .storeName i {font-style:normal;background:url('/web/image/search/shop.png') no-repeat;width:15px;height:15px;background-size:15px 15px;display:inline-block;position:relative;top:3px;margin-right:4px;}
+#store .allCom {color:#c6c6c6;}
+#store .allCom i {font-style:normal;color:red;margin-left:5px;}
+#store .intoShop i {font-style:normal;background:url('/web/image/detail/room.png') no-repeat;width:15px;height:15px;background-size:15px 15px;display:inline-block;position:relative;top:3px;margin-right:4px;}
+#store .chat {cursor:pointer;position:absolute;right:150px;}
+#store .chat:hover {color:red;}
+#store .chat i {font-style:normal;background:url('/web/image/detail/chat.png') no-repeat;width:15px;height:15px;background-size:15px 15px;display:inline-block;position:relative;top:3px;margin-right:4px;}
+
+#detailP {/border:1px solid #ededed;width:1150px;height:450px;margin:0 auto;position:relative;margin-top:20px;}
+#pic {width:420px;height:420px;margin-top:10px;margin-left:50px;/border:1px solid red;float:left;position:relative;}
+#pic img {width:420px;height:420px;}
+#pic img:hover {cursor:move;}
+
+#pic .mask {display:none;position:absolute;border:1px solid transparent;background:transparent;top:0px;left:0px;width:119px;height:119px;}
+#pic .top1 {border-bottom:1px solid red;top:-120px;left:0px;}
+#pic .left1 {border-right:1px solid red;top:0px;left:-120px;}
+#pic .right1 {border-left:1px solid red;top:0px;left:120px;}
+#pic .bottom1 {border-top:1px solid red;top:120px;left:0px;}
+#picHidden {display:none;position:absolute;width:420px;height:420px;left:10px;top:0px;border:1px solid red;top:10px;left:470px;z-index:50;}
+#detailP .rightD {width:520px;height:420px;float:left;/border:1px solid #F5F5F5;margin-left:100px;margin-top:10px;}
+#detailP .rightD .title{color:#6c6c6c;font-size:18px;font-weight:bold;padding:0px 10px;margin-top:10px;}
+#detailP .rightD .price {position:relative;color:red;margin-left:20px;margin-top:15px;display:inline-block;}
+#detailP .rightD .price i {font-size:20px;padding:5px 5px;position:relative;}
+#detailP .rightD .price span {font-size:30px;font-weight:bold;}
+#detailP .secd {border-top:1px dashed #ededed;border-bottom:1px dashed #ededed;padding:5px 0px;display:inline-block;margin-top:20px;position:relative;left:100px;}
+#detailP .sales {font-size:14px;color:#c6c6c6;margin-left:50px;border-right:1.5px solid #c6c6c6;padding:0px 5px;padding-right:40px;}
+#detailP .sales  i {color:#FF8A80;margin-left:10px;font-size:14px;font-weight:bold;}
+#detailP .comNum {font-size:14px;color:#c6c6c6;margin-left:40px;margin-right:20px;padding:0px 5px;}
+#detailP .comNum  i {color:#FF8A80;margin-left:10px;font-size:14px;font-weight:bold;}
+
+#allkinds {margin-top:5px;border-top:1px solid #ededed;border-bottom:1px solid #ededed;height:160px;}
+#allkinds .kinds {display:block;float:left;width:520px;/border:1px solid red;margin-top:10px;}
+#allkinds .kinds .dt {display:block;width:380px;float:left;}
+#allkinds .kinds .dt span {float:left;border:1.5px solid #ededed;font-size:13px;color:#6c6c6c;margin-left:20px;padding:5px 5px;cursor:pointer;}
+#allkinds .kinds .dt span:hover {border-color:red;color:Red;}
+#allkinds .kinds .kt {margin-left:0px;width:80px;display:block;text-align:center;float:left;font-size:13px;color:#6c6c6c;padding-top:5px;}
+
+.rightD .number {font-size:13px;color:#6c6c6c;margin-top:20px;display:block;}
+.rightD .number .num{margin-left:0px;width:80px;text-align:center;font-size:13px;color:#6c6c6c;padding-top:5px;display:inline-block;}
+.rightD .number input {width:80px;height:25px;margin-left:20px;}
+.rightD .number .totalNum {margin-left:20px;color:#c6c6c6;}
+.rightD .but {cursor:pointer;width:160px;height:35px;font-size:16px;background:#FF8A80;color:white;outline:none;margin-left:80px;margin-top:30px;border:none;}
+.rightD .addCart {margin-left:40px;}
+.rightD .but:hover {background:red;}
+
+#detAndCom {width:1050px;height:700px;margin:0 auto;/border:1px solid #ededed;margin-top:50px;}
+
+#detAndCom .detailPics {cursor:pointer;/border:1px solid red;padding:10px 25px;display:inline-block;font-size:14px;margin-left:30px;}
+#detAndCom .comments {cursor:pointer;/border:1px solid red;padding:10px 25px;display:inline-block;font-size:14px;margin-left:0px;}
+#detAndCom .cho {color:white;background:#FF8A80;}
+#detAndCom .ncho {color:#6c6c6c;background:transparent;}
+#detAndCom .ncho:hover {color:#ffffff;background:rgb(255,138,128,.6);}
+
+#detAndCom .line {width:1050px;height:2px;border-top:2px solid #FF8A80;}
+#detAndCom .content {/border:1px solid red;width:980px;margin-left:30px;height:2800px;position:relative;overflow:hidden;}
+#detAndCOm .content .magic_in {width:2000px;height:900px;transition:margin-left 0.3s linear;}
+#detAndCom .detailpic {float:left;width:980px;height:920px;}
+#detAndCom .detailpic img {width:980px;height:900px;/border:1px solid #F5F5F5}
+#detAndCom .comment {float:left;width:980px;height:900px;}
+#detAndCom .comment .com {width:980px;border-bottom:1px solid #FF8A80;height:90px;}
+#detAndCom .com div {float:left;color:#6c6c6c;font-size:14px;}
+#detAndCom .com .r_com {width:200px;height:90px;border-right:1px solid #F5f5f5;}
+#detAndCom .com .r_com .u_portrait {display:block;border:1px solid #F5f5f5;width:40px;height:40px;margin:15px auto;margin-bottom:0px;}
+#detAndCom .com .r_com .u_portrait img {width:40px;height:40px;}
+#detAndCom .com .r_com .u_name {width:200px;height:20px;/border:1px solid #f4f4f4;text-align:center;display:block;}
+#detAndCom .com .l_com {width:770px;height:90px;}
+#detAndCom .com .l_com .u_con {padding:15px 30px;float:left;}
+#detAndCom .pageturn {width:980px;height:80px;font-size:12px;color:#6c6c6c;margin-top:15px;}
+#detAndCOm .pageturn span{display:inline-block;/float:left;padding:5px 10px;float:right;}
+#detAndCom .pageturn .last {color:white;background:#FF8A80;margin-right:10px;cursor:pointer;}
+#detAndCom .pageturn .next {color:white;background:#FF8A80;cursor:pointer;}
+#detAndCom .pageturn .last:active {background:red;}
+#detAndCom .pageturn .next:active {background:red;}
+
+#chat {width:400px;height:240px;border:1px solid red;position:fixed;bottom:20px;right:20px;opacity:0.8;}
+
+
+
+
+
