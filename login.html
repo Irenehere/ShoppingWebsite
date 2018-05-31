@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta charset='utf-8'/>
+<title>登录UBUY</title>
+<link rel="shortcut icon" href="/web/image/bitbug_favicon.ico" /> 
+<script src='/jquery/jquery-1.7.2.min.js'></script>
+<style>
+div {margin:20px auto;width:200px;height:100px;}
+input {width:200px;}
+#login {margin-top:10px;}
+</style>
+</head>
+<body>
+<div>
+<input id='user' type='text' placeholder='用户名'/>
+<input id='passwd' type='password' placeholder='密码'/>
+<input id='login' type='button' value='登录'/>
+</div>
+</body>
+<script>
+$('#login').click(function(){
+	$.ajax({
+		url:'index.php',
+		data:{'user':$('#user').val(),'passwd':$('#passwd').val()},
+		type:'POST',
+		success:function(data){
+			loginOpt(data);
+		}
+	});
+});
+function encrypt(str1, str2){/*加密函数(可选)*/
+	return str1;
+}
+function loginOpt(data){
+	if (data == 'success'){
+		location.href=getRedirect();
+	} else if (data =='failure'){
+		alert('密码错误！');
+	} else {
+		alert(data);
+	}
+}
+function getRedirect(){
+	var s = window.location.href;
+	var i = s.indexOf('redirectURL');
+	return s.substring(i+12)
+}
+</script>
+</html>
