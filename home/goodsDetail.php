@@ -2,13 +2,14 @@
 <head>
 <meta charset='utf-8'/>
 <title>Welcome to UBUY!</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 <link rel="shortcut icon" href="/web/image/bitbug_favicon.ico" /> 
 <link rel="stylesheet" href="/web/home/css/index.css?ver=300" type="text/css"/>
 <link rel="stylesheet" href="/web/home/css/goodsDetail.css?ver=1309" type="text/css"/>
+<link rel="stylesheet" href="/web/home/chat/chat.css?ver=4130" type="text/css"/>
 <script src='/jquery/jquery-1.7.2.min.js'></script>
 <script src='/web/home/js/basic.js?ver=1.3'></script>
 <script src='/web/home/js/pro.js?var=1.0'></script>
+<script src='/web/home/chat/chat1.js?var=1.1'></script>
 </head>
 <body>
 <div id='top_bg'>
@@ -153,7 +154,20 @@
 </div>
 
 <div id='chat'>
-聊天
+	<div id='frame'>
+	<div id='content'>
+	</div>
+	<div class='scroll'>
+	</div>
+	</div>
+	<div id='textinput'>
+		<input type='text' id='input' placeholder='输入内容...'/>
+		<input type='button' id='send' value='发送'/>
+	</div>
+	<div id='more'>
+	<span class='smile'></span>
+	<span class='more'></span>
+	</div>
 </div>
 
 <script>
@@ -195,5 +209,11 @@ $('#allkinds .kinds .dt span').click(function(){
 window.onload = function(){
 	basic();
 }
+$('#chat').css('display','none');
+$('.chat').click(function(){
+	$('#chat').stop().slideDown();
+	prepareChat();
+	getUnRead();//这里已经开始socket了
+})
 </script>
 </html>
