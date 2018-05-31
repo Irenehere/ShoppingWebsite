@@ -1,0 +1,47 @@
+
+* {padding:0;margin:0;}
+i {font-style:normal;}
+#chat {z-index:99;background:white;width:400px;height:250px;border:1px solid red;position:fixed;top:10px;right:10px;opacity:0.9;}
+#content {width:398px;height:178px;overflow-y:scroll;overflow-x:hidden;background:url('/web/image/chat/tim.jpg');background-size:398px 187px;}
+#frame {width:380px;overflow:hidden;height:178px;;border:1px solid #c6c6c6;margin:10px auto;position:relative;}
+#textinput {width:380px;height:28px;/border:1px solid #c6c6c6;margin:0px auto;position:relative;}
+#input {width:320px;height:28px;outline:none;float:left;border:1px solid #ff8a80;border-bottom:1px solid #ff8a80;color:#ff8a80;padding-left:5px;font-size:14px;}
+#frame .scroll {display:none;position:absolute;height:50px;width:4px;right:0px;background:#c6c6c6;top:0px;}
+#send {/display:none;/position:absolute;width:60px;height:28px;outline:none;float:left;border:0px solid #c6c6c6;background:#ff8a80;color:white;cursor:pointer;right:0px;}
+#send:hover {background:#ff8a80;color:white;border-color:#ff8a80;}
+#send:active {background:#ff8a80;color:white;border-color:#ff8a80;}
+
+#more {width:380px;height:20px;margin:0 auto;/border:1px solid #6c6c6c;}
+#more span {margin-left:5px;float:right;}
+#more .smile {margin-right:60px;width:20px;height:20px;background:url('/web/image/chat/smile.png') no-repeat;background-position:0.5px;background-size:19px 19px;}
+#more .more {width:20px;height:20px;background:url('/web/image/chat/img2.png') no-repeat;background-position:0px;background-size:20px 20px;}
+
+/*
+#content span {font-size:14px;padding:5px 20px;width:340px;float:left;}
+.me {color:green;text-align:right;}
+.other {color:red;text-align:left;}
+*/
+
+.left2 {background:#ff8A80;margin-left:45px;max-width:180px;padding: 10px; word-wrap: break-word;border-radius:5px;
+    max-height: 3000px;text-align:left;}
+#chat .left1 {margin-left:45px;text-align:left;/padding:0px 0px;height:36px;/padding-top:10px;}
+.right2 {max-width:180px;padding: 10px; word-wrap: break-word;border-radius:5px;margin-top:10px;/border: 0.5px solid silver;
+    max-height: 3000px;text-align:left;margin-left:135px;background:#CBE871;/margin-right:45px;}
+#chat .right1{text-align:right;margin-left:155px;line-height:36px;width:180px;padding:0px 0px;height:36px;}
+.msg {width:380px;position:relative;color:white;font-size:12px;margin-bottom:10px;margin-top:10px;}
+.right1 span {background:#CBE871; padding:10px;border-radius:5px;font-size:12px;}
+.left1 span {background:#ff8A80; padding:10px;border-radius:5px;float:left;}
+.himg {width:30px;height:30px;background:#ff8a80;position:absolute;top:0px;}
+.msgL2 .himg {left:5px;}
+.msgL1 .himg {left:5px}
+.msgR1 .himg {right:5px;background:#CBE871;}
+.msgR2 .himg {right:5px;background:#CBE871}
+
+
+#chat .left1:before { position: absolute; content: ""; width: 0; height: 0;left:35px;top: 10px;border-top: 5px solid transparent;border-right: 10px solid #ff8a80;border-bottom: 5px solid transparent;}
+.left2:before { position: absolute; content: ""; width: 0; height: 0;left:35px;top: 10px;border-top: 5px solid transparent;border-right: 10px solid #ff8a80;border-bottom: 5px solid transparent;}
+#chat .right1:before{ position: absolute; content: ""; width: 0; height: 0;right:35px;top:  10px;border-top: 5px solid transparent;border-left: 10px solid #CBE871;border-bottom: 5px solid transparent;}
+.right2:before{ position: absolute; content: ""; width: 0; height: 0;right:35px;top: 10px;border-top: 5px solid transparent;border-left: 10px solid #CBE871;border-bottom: 5px solid transparent;}
+
+.showtime {width:380px;color:#c6c6c6;font-size:12px;text-align:center;line-height:15px;height:15px;margin:10px auto;}
+.showtime span {background:black;color:#c6c6c6;font-size:12px;padding-left:10px;padding-right:10px;background:#f5f5f5;}
