@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'/>
+	<title>UBUY购物车</title>
+	<link rel="stylesheet" href="css/shoppingCart.css">
+	
+<script>
+    window.onload = function () {
+        if (!document.getElementsByClassName) {
+            document.getElementsByClassName = function (cls) {
+                var ret = [];
+                var els = document.getElementsByTagName('*');
+                for (var i = 0, len = els.length; i < len; i++) {
+
+                    if (els[i].className.indexOf(cls + ' ') >=0 || els[i].className.indexOf(' ' + cls + ' ') >=0 || els[i].className.indexOf(' ' + cls) >=0) {
+                        ret.push(els[i]);
+                    }
+                }
+                return ret;
+            }
+        }
+		var table = document.getElementById('cartTable'); 
+        var selectInputs = document.getElementsByClassName('check'); 
+        var checkAllInputs = document.getElementsByClassName('check-all') 
+        var tr = table.children[1].rows; //行
+        var selectedTotal = document.getElementById('selectedTotal'); 
+        var priceTotal = document.getElementById('priceTotal');
+        var selected = document.getElementById('selected'); 
+        var foot = document.getElementById('foot');
+		
+		//动态加载购物车信息
+		//var str=eval('<?php echo json_encode($a);?>');
+		var str=[{"shopname":"优衣库","storeid":"001","pic":"images/goods.png","name":"T-shirt", "attrs":"S","quantity":"1","total":"58.00"},
+				{"shopname":"Sony","storeid":"101","pic":"images/goods.png","name":"pants","attrs":"M","quantity":"2", "total":"599.00"}];
+		var data=eval(str);
+		for(var i=0;i<data.length;i++){
+			var row=table.insertRow(table.rows.length);
+			var c0=row.insertCell(0);
+			c0.className="checkbox";
+			c0.innerHTML="<input type=\"checkbox\" class=\"check-one check\">";
+			var c1=row.insertCell(1);
+			c1.className="goods";
+			var goods_pic="<a href='details/goods/"+data[i].storeid+"/'><img class='goods'src="+data[i].pic+"></a>";
+			var goods_span="<span>"+data[i].name+"</span>";
+			c1.innerHTML=goods_pic+goods_span;
+			var c2=row.insertCell(2);
+			c2.className="attributes";
+			c2.innerHTML=data[i].attrs;
+			var c3=row.insertCell(3);
+			c3.className="count";
+			c3.innerHTML=data[i].quantity;
+			var c4=row.insertCell(4);
+			c4.className="subtotal";
+			c4.innerHTML=data[i].total;
+			var c5=row.insertCell(5);
+			c5.className="operation";
+			c5.innerHTML="<img class='delete' src='images/delete.png' width='20px'/>";
+		}
+		
+        // 更新总数和总价格、收件信息
+        function getTotal() {
+            var seleted = 0;
+            var price = 0;
+            var HTMLstr = '';
+            for (var i = 0, len = tr.length; i < len; i++) {
+                if (tr[i].getElementsByTagName('input')[0].checked) {
+                    tr[i].className = 'on';
+                    seleted += parseInt(tr[i].cells[3].innerHTML);
+                    price += parseFloat(tr[i].cells[4].innerHTML);
+                }
+                else {
+                    tr[i].className = '';
+                }
+            }
+            selectedTotal.innerHTML = seleted;
+            priceTotal.innerHTML = price.toFixed(2);
+			
+			var pTotal = document.getElementById('pTotal'); 
+			pTotal.innerHTML=price.toFixed(2);
+
+            if (seleted == 0) {
+                foot.className = 'foot';
+            }
+        }
+		
+        // 点击选择框
+        for(var i = 0; i < selectInputs.length; i++ ){
+            selectInputs[i].onclick = function () {
+                if (this.className.indexOf('check-all') >= 0) {
+                    for (var j = 0; j < selectInputs.length; j++) {
+                        selectInputs[j].checked = this.checked;
+                    }
+                }
+                if (!this.checked) { 
+                    for (var i = 0; i < checkAllInputs.length; i++) {
+                        checkAllInputs[i].checked = false;
+                    }
+                }
+                getTotal();
+            }
+        }
+
+        //删除单条购物车记录
+        for (var i = 0; i < tr.length; i++) {
+            tr[i].onclick = function (e) {
+                var e = e || window.event;
+                var el = e.target || e.srcElement;
+                var cls = el.className; 
+                switch (cls) {
+                    case 'delete': 
+                        var conf = confirm('确定删除此商品吗？');
+                        if (conf) {
+                            this.parentNode.removeChild(this);
+							/*调用删除函数*/
+                        }
+                        break;
+                }
+                getTotal();
+            }
+			}
+		
+        
+        // 默认全选
+        checkAllInputs[0].checked = true;
+        checkAllInputs[0].onclick();
+		
+		//跳转商品详情页
+		function doLink(strURL)  
+		{  
+			window.location.href = strURL;  
+		} 
+		
+		//收货信息
+		/*调用customer_info.py函数*/
+		var str1={"customername":"Amy","address":"广东省广州市广州大学城","phone":"13700000000"};
+		var cinfo=eval(str1);
+		var address = document.getElementById('addr');
+		var cname = document.getElementById('cname');
+		var cphone = document.getElementById('phone');
+		address.innerHTML = cinfo.address;
+		cname.innerHTML = cinfo.customername;
+		cphone.innerHTML = cinfo.phone;
+		
+		
+		//结算
+		function checkout(){
+			document.getElementById("title").innerHTML = "确认订单";
+			/*
+			// 将勾选行商品信息复制到订单表chtable；
+			var chtable = document.getElementById('checkoutTable');
+			for(var i=0,i<tr.length,i++){
+				if (tr[i].getElementsByTagName('input')[0].checked) {
+					
+					}
+			*/		
+			document.getElementById("cartTab").style.display="none";
+			document.getElementById("checkout").style.display="none";
+			document.getElementById("checkoutTab").style.display="inline";
+			document.getElementById("submit").style.display="inline";
+
+		}
+		
+		//提交订单
+		function submit(n){
+			/*调用支付函数*/
+            document.getElementById('pwbox').style.display=n?'block':'none';  
+		}
+		}
+
+    
+    
+</script>
+</head>
+
+<body>
+	<div class="top">
+		<div class="top_minwidth">
+		
+		<div class="logo">
+			<a href="../顾客首页/index.html"><img src="images/logo3.png" alt="UBUY logo" height='45px'></a></div>
+		
+		<div class="title">
+			<span id="title">购物车</span></div>
+		
+		<div class="dropdown">
+			<button class="dropbtn">我的
+				<img src="images/triangle.png" width="15px"></button>
+			<div class="dropdown-content">
+				<a href="">订单管理</a>
+				<a href="">资金管理</a>
+				<a href="">基础信息管理</a>
+			</div>
+		</div>
+		
+		<div class="top_right">
+			<a href="shoppingCart.html">购物车
+				<img src="images/shoppingCart.png" width="20px"></a>
+		</div>
+		</div>
+	</div>
+	
+	<div class="catbox">
+	<div class="cartTab" id="cartTab">
+    <table id="cartTable">
+        <thead>
+        <tr>
+            <th><label>
+                <input class="check-all check" type="checkbox">全选</label></th>
+
+			<th>商品信息</th>
+            <th>属性</th>
+            <th>数量</th>
+            <th>总价</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr class="on">
+            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
+            <td class="goods" onClick="doLink('https://www.sina.com.cn/');"><img src="images/goods.png" alt=""><span>优衣库</span></td>
+            <td class="attributes">S</td>
+            <td class="count">1</td>
+            <td class="subtotal">5999.88</td>
+            <td class="operation"><img class="delete" src="images/delete.png"width="20px"></td>
+        </tr>
+        <tr class="on">
+            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
+            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
+            <td class="attributes">S</td>
+            <td class="count">1</td>
+            <td class="subtotal">3888.50</td>
+            <td class="operation"><img class="delete" src="images/delete.png"width="20px"></td>
+        </tr>
+        <tr class="on">
+            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
+            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
+            <td class="attributes">S</td>
+            <td class="count">1</td>
+            <td class="subtotal">1428.50</td>
+            <td class="operation"><img class="delete" src="images/delete.png" width="20px"></td>
+        </tr>
+        <tr class="on">
+            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
+            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
+            <td class="attributes">S</td>
+            <td class="count">2</td>
+            <td class="subtotal">640.60</td>
+            <td class="operation"><img class="delete" src="images/delete.png" width="20px"></td>
+
+		<tr class="on">
+            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
+            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
+            <td class="attributes">S</td>
+            <td class="count">2</td>
+            <td class="subtotal">640.60</td>
+            <td class="operation"><img class="delete" src="images/delete.png" width="20px"></td>
+        </tr>
+        </tbody>
+
+    </table>
+	</div>
+
+	<div class="checkoutTab" id="checkoutTab">
+	<div class="cancel"><a class='cancel'href="javascript:history.go(-1);"><img src='images/backward.png' width='20px'>&nbsp取消订单</a></div></br>
+	<table id="checkoutTable">
+	<thead>
+        <tr>
+			<th>商品信息</th>
+            <th>属性</th>
+            <th>数量</th>
+            <th>总价</th>
+        </tr>
+    </thead>
+		<tbody>
+			<tr class="on">
+            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
+            <td class="attributes">S</td>
+            <td class="count">2</td>
+            <td class="subtotal">640.60</td>
+        </tr>
+        </tbody>
+	</table>
+	</div>
+
+	<div class="submit" id="submit">
+		<div class="info">
+		<div class="totalm">实付款：￥<span id="pTotal">0.00</span></div></br>
+		<div class="customerinfo" >寄送到：<span id="addr"></span></br>
+			收件人：<span id="cname"></span>&nbsp&nbsp&nbsp&nbsp联系电话：<span id="phone"></span>
+			</div>
+		</div>
+		<div class="tijiao" onclick="submit(1)">提交订单</div>
+
+	</div>
+
+    <div class="foot" id="foot">
+	<div class="checkout" id="checkout">
+        <div class="fr closing" onclick="checkout()"><a id="checkout">结 算</a></div>
+        <input type="hidden" id="cartTotalPrice">
+        <div class="fr selected" id="selected">已选商品<span id="selectedTotal">0</span>件</div>
+		<div class="fr total">合计：￥<span id="priceTotal">0.00</span></div>
+	</div>
+	
+	<div id='pwbox' class="box">
+        <a class='x' href=''; onclick="msgbox(0); return false;"><img src='images/close.png' width='30px'></a>
+		<span class='tsy'>请输入支付密码：</span>
+		<input class="password" id="password" name="password" type="password"><br>
+        <input type="button" value="确定">
+     </div>
+</body>
+</html>

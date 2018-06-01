@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset='utf-8'/>
+	<title>用户登录</title>
+	<link rel="stylesheet" href="css/login.css">
+
+<script>
+	function Check(LoginForm){
+		if(LoginForm.name.value==""){
+			alert("请输入用户名！");
+			LoginForm.name.focus();
+			return(false);
+		}
+		if(LoginForm.password.value==""){
+			alert("请输入密码！");
+			LoginForm.password.focus();
+			return(false);
+		}
+	}
+</script>
+ 
+</head>
+
+<body>
+	<div class="mainframe">
+	<div class="minwidth">
+		<div class="left">
+			<img class="slogan" src="images/left.png" />
+		</div>
+		
+		<div class="right">
+			</br>
+			</br>
+			</br>
+			<span class="text1">用户登录</span>
+			</br>
+			</br>
+			<form name="LoginForm" action="customerLogIn.php" method="post" onSubmit='return check()'>
+				<input class="name" id="name" name="name" type="text" placeholder="用户名"><br>
+				<input class="password" id="password" name="password" type="password" placeholder="密码"><br>
+				<input type="submit" value="登录">
+			</form>
+			</br>
+			<a id="forgetpw" href="forgetpw.html">忘记密码</a>
+			<a id="signin" href="signin.html">免费注册</a>
+		</div>
+	</div>
+	</div>
+</body>
+</html>	
