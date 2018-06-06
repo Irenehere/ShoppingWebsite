@@ -98,7 +98,7 @@ def add_cart(js):
 
 
 
-# ***********************显示购物车信息：****************************************
+# ***********************显示购物车信息：***********************************************************
 def cart_info(customerid):
     '''根据顾客id得到购物车的信息，如果没有购物车信息的话返回“0”，否则返回以下格式的数据：
 [{"shopname":"name",
@@ -114,48 +114,91 @@ def cart_info(customerid):
                     {"attrname":"尺寸","attrvalue":"小号"}],
             "quantity":"2","total":"58"},
            {"storeid":"id","pic":"url","name":"name",
-            "quantity":"2","total":"58"}]}'''
+           "quantity":"2","total":"58"}]}]'''
 
-    sql = "select distinct storeid,quantity,shoppingcarttotal from T_Shoppingcart where customerid='{}'".format(customerid)
+    sql = "select distinct storeid from T_Shoppingcart where customerid='{}'".format(customerid)
     items = searchDB(sql)
-    cartinfo = []
+    # 根据库存id得到不同的店铺
+    shop_store = dict()
     for item in items:
         storeid = item[0]
-        quantity = item[1]
-        # 根据库存id得到商品属性
-        sql4 = "SELECT a.attributename,pa.attribute FROM T_Attribute a ,T_Productattribute pa " \
-               "WHERE a.attributeid = pa.attributeid and pa.storeid='{}' ".format(storeid)
-        attrs = searchDB(sql4)
+        shopname = get_shopname_based_on_storeid(storeid)
+        shop_store.setdefault(shopname,[])
+        shop_store[shopname].append(storeid)
+
+    '''为不同的店铺生成不同的信息'''
+    cartallinfo = '['
+    for shopname, storeids in shop_store.items():
+        cartinfo = '{"shopname":"' + shopname + '","products":"' + '['
+        for storeid in storeids:
+            cartinfo += pInfo(customerid,storeid) + '",'
+        cartinfo = cartinfo[:-1] + ']},'
+    cartallinfo = cartallinfo[:-1] + ']'
+    return cartallinfo
+
+
+# 产品属性信息
+def productsInfo(customerid):
+    '''根据顾客id得到一系列属性等信息,格式如下：
+           [{"storeid":"id","pic":"url","name":"name",
+           "attrs":[{"attrname":"颜色","attrvalue":"白色"},
+                    {"attrname":"尺寸","attrvalue":"小号"}],
+            "quantity":"2","total":"58"},
+           {"storeid":"id","pic":"url","name":"name",
+            "quantity":"2","total":"58"}]'''
+
+    sql = "select distinct storeid from T_Shoppingcart where customerid='{}'".format(customerid)
+    items = searchDB(sql)
+    productsInfo = '['
+    for item in items:
+        storeid = item[0]
+        # 得到商品的名称
+        productid = 'p' + storeid[1:13]
+        sql2 = "SELECT productname FROM T_Product WHERE productid='{}' ".format(productid)
+        productname = searchDB(sql2)[0][0]
+        sql5 = "SELECT p.productimage FROM T_Product p WHERE  p.productid='{}'".format(productid)
+        productimage = searchDB(sql5)[0][0]
+        sql6 = "SELECT  p.price FROM T_Product p WHERE  p.productid='{}'".format(productid)
+        productprice = searchDB(sql6)[0][0]
+
+        # 得到商品的属性
+        sql3 = '''SELECT a.attributename,pa.attribute FROM T_Attribute a ,T_Productattribute pa
+                WHERE a.attributeid = pa.attributeid and pa.storeid='{}' '''.format(storeid)
+        attrs = searchDB(sql3)
+        # 得到该商品的数量和价格
+        sql4 = "select quantity,shoppingcarttotal from T_Shoppingcart where customerid = '{}' and storeid = '{}'".format(customerid, storeid)
+        quantity_total = searchDB(sql4)
+        # 数量：quantity_total[0][0]  价格:quantity_total[0][1]
+        quantity = str(quantity_total[0][0])
+
+        totalsum = str(productprice * quantity_total[0][0])
+
         # 得到json格式的属性信息
         productAttrsInfo = '['
         for item in attrs:
             attrname = item[0]
             attrvalue = item[1]
             productAttrsInfo += '{"attrname":"' + attrname + '","attrvalue":"' + attrvalue + '"},'
-
         productAttrsInfo = productAttrsInfo[:-1] + ']'
-        # 根据库存id得到商品id
-        productid = 'p' + storeid[1:13]
-        # 根据库存id得到商品名称
-        sql2 = "SELECT productname FROM T_Product WHERE productid='{}' ".format(productid)
-        productname = searchDB(sql2)[0][0]
-        # 根据商品id得到商品图片、店铺名称、商品单价
-        sql3 = "SELECT p.productimage,m.merchantname,p.price " \
-               "FROM T_Product p,(SELECT merchantid,merchantname FROM T_Merchant) m " \
-               "WHERE p.merchantid = m.merchantid and p.productid='{}'".format(productid)
 
-        results = searchDB(sql3)[0]
-        totalsum = results[2] * quantity
+        productInfo1 = '{"storeid":"' + storeid + '","pic":"' + productimage + '","name"："' + productname + '","attrs":' + productAttrsInfo + ',"quantity":"' + quantity + '","total":"' + totalsum + '"}'
+        productInfo2 = '{"storeid":"' + storeid + '","pic":"' + productimage + '","name"："' + productname + '","quantity":"' + quantity + '","total":"' + totalsum + '"}'
 
+        if len(productAttrsInfo) < 2:
+            productsInfo += productInfo2+','
+        else:
+            productsInfo += productInfo1 + ','
 
-        dict = {"shopname": results[1],
-                "products": [{"storeid": storeid, "pic": results[0], "name": productname,"attrs": productAttrsInfo,
-                "quantity": item[1], "total": totalsum},
-               {"storeid": storeid, "pic": results[0], "name": productname,
-                "quantity": item[1], "total": totalsum}]}
-        cartinfo.append(dict)
-    return cartinfo
+    productsInfo = productsInfo[:-1] + ']'
+    return productsInfo
 
+def get_shopname_based_on_storeid(storeid):
+    '''根据库存id得到店铺的名称'''
+    productid = 'p' + storeid[1:13]
+    results = searchDB( "SELECT m.merchantname FROM T_Product p,(SELECT merchantid,merchantname FROM T_Merchant) m " \
+          "WHERE p.merchantid = m.merchantid and p.productid='{}'".format(productid))
+    shopname = results[0][0]
+    return shopname
 
 # ****************************************************************************************
 
@@ -165,9 +208,6 @@ def delete_cart_item(customerid, storeid):
     '''删除指定的购物车信息，成功返回"1",否则返回“0”'''
     sql = "DELETE FROM T_Shoppingcart where customerid = '{}' and storeid = '{}'".format(customerid, storeid)
     executeSql(sql)
-
-
-
 
 
 
