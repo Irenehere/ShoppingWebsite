@@ -31,33 +31,67 @@
 		
 		//动态加载购物车信息
 		//var str=eval('<?php echo json_encode($a);?>');
-		var str=[{"shopname":"优衣库","storeid":"001","pic":"images/goods.png","name":"T-shirt", "attrs":"S","quantity":"1","total":"58.00"},
-				{"shopname":"Sony","storeid":"101","pic":"images/goods.png","name":"pants","attrs":"M","quantity":"2", "total":"599.00"}];
+		var str=[{"shopname":"优衣库旗舰店",
+"products":[{"storeid":"id",
+               "pic":"images/goods.png",
+               "name":"T-shirt",
+               "attrs":[{"attrname":"颜色","attrvalue":"白色"},
+                        {"attrname":"尺寸","attrvalue":"小号"}],
+                "quantity":"2",
+                "total":"58.00"},
+               {"storeid":"id",
+                "pic":"images/goods.png",
+                "name":"shirt",
+                "quantity":"1",
+                "total":"59.99"}]},
+ {"shopname":"优衣库旗舰店",
+"products":[{"storeid":"id",
+               "pic":"images/goods.png",
+               "name":"T-shirt",
+               "attrs":[{"attrname":"颜色","attrvalue":"白色"},
+                        {"attrname":"尺寸","attrvalue":"小号"}],
+                "quantity":"2",
+                "total":"58.00"},
+               {"storeid":"id",
+                "pic":"images/goods.png",
+                "name":"shirt",
+                "quantity":"1",
+                "total":"59.99"}]}];
 		var data=eval(str);
 		for(var i=0;i<data.length;i++){
-			var row=table.insertRow(table.rows.length);
-			var c0=row.insertCell(0);
+		var shoprow=table.insertRow(table.rows.length);
+		var c0=shoprow.insertCell(0);
+		var c1=shoprow.insertCell(1);
+		c1.className="shopname";
+		c1.innerHTML="<img src='images/shop.png' width='20px'/>"+"&nbsp&nbsp"+data[i].shopname;
+		for(var j=0;j<data[i].products.length;j++){
+			var goodsrow=table.insertRow(table.rows.length);
+			var c0=goodsrow.insertCell(0);
 			c0.className="checkbox";
 			c0.innerHTML="<input type=\"checkbox\" class=\"check-one check\">";
-			var c1=row.insertCell(1);
+			var c1=goodsrow.insertCell(1);
 			c1.className="goods";
-			var goods_pic="<a href='details/goods/"+data[i].storeid+"/'><img class='goods'src="+data[i].pic+"></a>";
-			var goods_span="<span>"+data[i].name+"</span>";
+			var goods_pic="<a href='details/goods/"+data[i].products[j].storeid+"/'><img class='goods'src="+data[i].products[j].pic+"></a>";
+			var goods_span="<span>"+data[i].products[j].name+"</span>";
 			c1.innerHTML=goods_pic+goods_span;
-			var c2=row.insertCell(2);
+			var c2=goodsrow.insertCell(2);
 			c2.className="attributes";
-			c2.innerHTML=data[i].attrs;
-			var c3=row.insertCell(3);
+			c2.innerHTML="";
+			if(Object.keys(data[i].products[j]).length==6){
+				for(var z=0;z<data[i].products[j].attrs.length;z++){
+					c2.innerHTML+=(data[i].products[j].attrs[z].attrname+"："+data[i].products[j].attrs[z].attrvalue);
+					c2.innerHTML+="</br>";}	}
+			var c3=goodsrow.insertCell(3);
 			c3.className="count";
-			c3.innerHTML=data[i].quantity;
-			var c4=row.insertCell(4);
+			c3.innerHTML=data[i].products[j].quantity;
+			var c4=goodsrow.insertCell(4);
 			c4.className="subtotal";
-			c4.innerHTML=data[i].total;
-			var c5=row.insertCell(5);
+			c4.innerHTML=data[i].products[j].total;
+			var c5=goodsrow.insertCell(5);
 			c5.className="operation";
-			c5.innerHTML="<img class='delete' src='images/delete.png' width='20px'/>";
-		}
-		
+			c5.innerHTML="<img class='delete' src='images/delete.png' width='20px'/>";}}
+						
+				
         // 更新总数和总价格、收件信息
         function getTotal() {
             var seleted = 0;
@@ -75,10 +109,6 @@
             }
             selectedTotal.innerHTML = seleted;
             priceTotal.innerHTML = price.toFixed(2);
-			
-			var pTotal = document.getElementById('pTotal'); 
-			pTotal.innerHTML=price.toFixed(2);
-
             if (seleted == 0) {
                 foot.className = 'foot';
             }
@@ -130,46 +160,7 @@
 		{  
 			window.location.href = strURL;  
 		} 
-		
-		//收货信息
-		/*调用customer_info.py函数*/
-		var str1={"customername":"Amy","address":"广东省广州市广州大学城","phone":"13700000000"};
-		var cinfo=eval(str1);
-		var address = document.getElementById('addr');
-		var cname = document.getElementById('cname');
-		var cphone = document.getElementById('phone');
-		address.innerHTML = cinfo.address;
-		cname.innerHTML = cinfo.customername;
-		cphone.innerHTML = cinfo.phone;
-		
-		
-		//结算
-		function checkout(){
-			document.getElementById("title").innerHTML = "确认订单";
-			/*
-			// 将勾选行商品信息复制到订单表chtable；
-			var chtable = document.getElementById('checkoutTable');
-			for(var i=0,i<tr.length,i++){
-				if (tr[i].getElementsByTagName('input')[0].checked) {
-					
-					}
-			*/		
-			document.getElementById("cartTab").style.display="none";
-			document.getElementById("checkout").style.display="none";
-			document.getElementById("checkoutTab").style.display="inline";
-			document.getElementById("submit").style.display="inline";
-
 		}
-		
-		//提交订单
-		function submit(n){
-			/*调用支付函数*/
-            document.getElementById('pwbox').style.display=n?'block':'none';  
-		}
-		}
-
-    
-    
 </script>
 </head>
 
@@ -207,7 +198,6 @@
         <tr>
             <th><label>
                 <input class="check-all check" type="checkbox">全选</label></th>
-
 			<th>商品信息</th>
             <th>属性</th>
             <th>数量</th>
@@ -215,100 +205,18 @@
             <th>操作</th>
         </tr>
         </thead>
-
         <tbody>
-
-        <tr class="on">
-            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
-            <td class="goods" onClick="doLink('https://www.sina.com.cn/');"><img src="images/goods.png" alt=""><span>优衣库</span></td>
-            <td class="attributes">S</td>
-            <td class="count">1</td>
-            <td class="subtotal">5999.88</td>
-            <td class="operation"><img class="delete" src="images/delete.png"width="20px"></td>
-        </tr>
-        <tr class="on">
-            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
-            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
-            <td class="attributes">S</td>
-            <td class="count">1</td>
-            <td class="subtotal">3888.50</td>
-            <td class="operation"><img class="delete" src="images/delete.png"width="20px"></td>
-        </tr>
-        <tr class="on">
-            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
-            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
-            <td class="attributes">S</td>
-            <td class="count">1</td>
-            <td class="subtotal">1428.50</td>
-            <td class="operation"><img class="delete" src="images/delete.png" width="20px"></td>
-        </tr>
-        <tr class="on">
-            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
-            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
-            <td class="attributes">S</td>
-            <td class="count">2</td>
-            <td class="subtotal">640.60</td>
-            <td class="operation"><img class="delete" src="images/delete.png" width="20px"></td>
-
-		<tr class="on">
-            <td class="checkbox"><input class="check-one check" type="checkbox"></td>
-            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
-            <td class="attributes">S</td>
-            <td class="count">2</td>
-            <td class="subtotal">640.60</td>
-            <td class="operation"><img class="delete" src="images/delete.png" width="20px"></td>
-        </tr>
         </tbody>
-
     </table>
 	</div>
-
-	<div class="checkoutTab" id="checkoutTab">
-	<div class="cancel"><a class='cancel'href="javascript:history.go(-1);"><img src='images/backward.png' width='20px'>&nbsp取消订单</a></div></br>
-	<table id="checkoutTable">
-	<thead>
-        <tr>
-			<th>商品信息</th>
-            <th>属性</th>
-            <th>数量</th>
-            <th>总价</th>
-        </tr>
-    </thead>
-		<tbody>
-			<tr class="on">
-            <td class="goods"><img src="images/goods.png" alt=""><span>优衣库</span></td>
-            <td class="attributes">S</td>
-            <td class="count">2</td>
-            <td class="subtotal">640.60</td>
-        </tr>
-        </tbody>
-	</table>
-	</div>
-
-	<div class="submit" id="submit">
-		<div class="info">
-		<div class="totalm">实付款：￥<span id="pTotal">0.00</span></div></br>
-		<div class="customerinfo" >寄送到：<span id="addr"></span></br>
-			收件人：<span id="cname"></span>&nbsp&nbsp&nbsp&nbsp联系电话：<span id="phone"></span>
-			</div>
-		</div>
-		<div class="tijiao" onclick="submit(1)">提交订单</div>
-
-	</div>
-
+	
     <div class="foot" id="foot">
 	<div class="checkout" id="checkout">
-        <div class="fr closing" onclick="checkout()"><a id="checkout">结 算</a></div>
+        <div class="fr closing"><button type="button" class="fr closing" onclick=""><a id="checkout">结 算</a></button></div>
         <input type="hidden" id="cartTotalPrice">
         <div class="fr selected" id="selected">已选商品<span id="selectedTotal">0</span>件</div>
-		<div class="fr total">合计：￥<span id="priceTotal">0.00</span></div>
-	</div>
+		<div class="fr total">合计：￥<span id="priceTotal">0.00</span></div></div>
+	</div></div>
 	
-	<div id='pwbox' class="box">
-        <a class='x' href=''; onclick="msgbox(0); return false;"><img src='images/close.png' width='30px'></a>
-		<span class='tsy'>请输入支付密码：</span>
-		<input class="password" id="password" name="password" type="password"><br>
-        <input type="button" value="确定">
-     </div>
 </body>
 </html>
